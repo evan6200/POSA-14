@@ -53,7 +53,7 @@ public class Main
         /* 
          * Run both threads concurrently.
          */
-     //   consumer.start();
-     //   producer.start();
+        consumer.start();
+        producer.start();
     }
 }
