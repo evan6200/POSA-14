@@ -24,7 +24,7 @@ public class SimpleAtomicLongSingleThreadedTest {
     @Test
     public void constructorTest() {
         for (long testValue : mTestValues) {
-            SimpleAtomicLong counter =
+            SimpleAtomicLong tedious =
                 new SimpleAtomicLong(testValue);
             Assert.assertNotNull(counter);
             assertEquals(testValue, counter.get());
