@@ -2,7 +2,6 @@ package edu.vuum.mocca;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,61 +22,53 @@ public class PingPongActivity extends Activity {
     private static int PLAY = 0;
     private static int RESET = 1;
     private int mGameState = PLAY;
-    //public Handler myHandler;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("onCreate  CurrentThread = " + Thread.currentThread().getName());
-       // myHandler = new Handler();
-        /** Sets the content view to the xml file, activity_ping_pong. */
+        // Sets the content view to the xml file, activity_ping_pong.
         setContentView(R.layout.activity_ping_pong);
-        mAndroidPingPongOutput = (TextView) findViewById(R.id.pingpong_output);
+        mAndroidPingPongOutput =
+            (TextView) findViewById(R.id.pingpong_output);
         mPlayButton = (Button) findViewById(R.id.play_button);
-        
-        
 
-        /**
-         * Initializes the Platform singleton with the appropriate Platform
-         * strategy, which in this case will be the AndroidPlatform.
-         */
-        // create the Android specific strategy for playing ping pong
-        AndroidPlatformStrategy androidPlatformStrategy = new AndroidPlatformStrategy(
-                mAndroidPingPongOutput, this);
-        
-        // assign the android specific strategy to the unique singleton
-        PlatformStrategy.instance(androidPlatformStrategy);
+        // Initializes the Platform singleton with the appropriate
+        // Platform strategy, which in this case will be the
+        // AndroidPlatform.
+        PlatformStrategy.instance
+            (new PlatformStrategyFactory
+             (mAndroidPingPongOutput,
+              this).makePlatformStrategy());
 
-        /** Initializes the Options singleton. */
-        String args[] = new String[] { "PlayPingPongGUI" };
-        Options.instance().parseArgs(args);
+        // Initializes the Options singleton. 
+        Options.instance().parseArgs(null);
     }
 
     /** Sets the action of the button on click state. */
     public void playButtonClicked(View view) {
         if (mGameState == PLAY) {
-            /**
-             * Use a factory method to create the appropriate type of
-             * OutputStrategy.
-             */
-            PlayPingPong pingPong = new PlayPingPong(
-                    PlatformStrategy.instance(), Options.instance()
-                            .maxIterations(), Options.instance().maxTurns(),
-                    Options.instance().syncMechanism());
+            // Use a factory method to create the appropriate type of
+            // OutputStrategy.
+            PlayPingPong pingPong =
+                new PlayPingPong(PlatformStrategy.instance(),
+                                 Options.instance().maxIterations(),
+                                 Options.instance().maxTurns(),
+                                 Options.instance().syncMechanism());
 
-            /**
-             * Play ping-pong with the designated number of iterations.
-             */
+            // Play ping-pong with the designated number of
+            // iterations.
             new Thread(pingPong).start();
             mPlayButton.setText(R.string.reset_button);
             mGameState = RESET;
         } else if (mGameState == RESET) {
 
-            /** Empty TextView and prepare the UI to play another game */
+            // Empty TextView and prepare the UI to play another game.
             mAndroidPingPongOutput.setText(R.string.empty_string);
             mPlayButton.setText(R.string.play_button);
             mGameState = PLAY;
         } else {
-            /** Notify the player that something has gone wrong and reset */
+            // Notify the player that something has gone wrong and
+            // reset.
             mAndroidPingPongOutput.setText("Unknown State entered!");
             mGameState = RESET;
         }

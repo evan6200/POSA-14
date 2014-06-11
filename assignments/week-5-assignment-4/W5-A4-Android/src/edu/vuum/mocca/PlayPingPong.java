@@ -253,9 +253,11 @@ public class PlayPingPong implements Runnable {
 
     private void formatStrings() {
         if (!checkedStringFormatting) {
-            if (mPlatformStrategy.platformName().equals("The Android Project")) {
+        	PlatformStrategyFactory.PlatformType type = 
+        			PlatformStrategyFactory.PlatformType.ANDROID;
+        			
+            if (PlatformStrategyFactory.platformType().equals(type)) 
                 pingString += "  ";
-            }
             checkedStringFormatting = true;
         }
     }
@@ -326,6 +328,6 @@ public class PlayPingPong implements Runnable {
         mPlatformStrategy.awaitDone();
 
         /** Let the user know we're done. */
-         mPlatformStrategy.print("Done!");
+        mPlatformStrategy.print("Done!");
     }
 }

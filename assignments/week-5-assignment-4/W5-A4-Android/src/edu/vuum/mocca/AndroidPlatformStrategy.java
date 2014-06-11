@@ -2,12 +2,9 @@ package edu.vuum.mocca;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CountDownLatch;
-import android.os.Handler;
-import java.util.logging.LogRecord;
 
 import android.app.Activity;
 import android.widget.TextView;
-import android.os.Message;
 import android.util.Log;
 
 /**
@@ -22,7 +19,7 @@ public class AndroidPlatformStrategy extends PlatformStrategy
 {	
     /** TextViewVariable. */
     private TextView mTextViewOutput;
-    
+	
     /** Activity variable finds gui widgets by view. */
     private WeakReference<Activity> mActivity;
 
@@ -34,7 +31,6 @@ public class AndroidPlatformStrategy extends PlatformStrategy
          * expression trees.
          */
         mTextViewOutput = (TextView) output;
-        
 
         /** The current activity window (succinct or verbose). */
         mActivity = new WeakReference<Activity>((Activity) activityParam);
@@ -49,7 +45,7 @@ public class AndroidPlatformStrategy extends PlatformStrategy
     /** Do any initialization needed to start a new game. */
     public void begin()
     {
-        /** Reset the CountDownLatch. */
+        /** (Re)initialize the CountDownLatch. */
         // TODO - You fill in here.
     	mLatch= new CountDownLatch(2);
     }
@@ -63,23 +59,17 @@ public class AndroidPlatformStrategy extends PlatformStrategy
          */
         // TODO - You fill in here.
     	mActivity.get().runOnUiThread(new Runnable() {
-             public void run() {              	 
-               	mTextViewOutput.append(outputString + "\n");
-               }
-           }); 
-    	  /*	 
-    	handler.post(new Runnable() {
-             public void run() {              	 
-                	mTextViewOutput.append(outputString + "\n");
-                }
-            });
-     */     
+            public void run() {              	 
+              	mTextViewOutput.append(outputString + "\n");
+              }
+          }); 
     }
 
     /** Indicate that a game thread has finished running. */
     public void done()
     {	
         // TODO - You fill in here.
+
     	mLatch.countDown();
     }
 
@@ -87,18 +77,12 @@ public class AndroidPlatformStrategy extends PlatformStrategy
     public void awaitDone()
     {
         // TODO - You fill in here.
-    	 try {
-			mLatch.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-
-    /** Returns the platform name in a String. */
-    public String platformName() 
-    {
-        return System.getProperty("java.specification.vendor");
+    	try {
+ 			mLatch.await();
+ 		} catch (InterruptedException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
     }
 
     /** 
@@ -109,9 +93,4 @@ public class AndroidPlatformStrategy extends PlatformStrategy
     {
        Log.e(javaFile, errorMessage);
     }
-    public void handleMessage(Message msg) {
-    //	mActivity.get()
-    }
-    
 }
-
